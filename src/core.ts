@@ -88,4 +88,36 @@ export const lookbehind = (regStr: string) => {
 export const negativeLookBehind = (regStr: string) => {
   return `(?<!${regStr})`
 }
+/**
+ * @en Returns a string in the regex syntax for a named group of the regex strings in regStr.
+ * @zh 返回一个使用具名group包裹的字符串
+ * @explain
+ * @en Named groups can be referred to by their name rather than their group number.
+ * @zh 可以在结果中使用名称而非索引号来访问。
+ * @example
+ * text:Gogo
+ * regex:/(?<num>Go)/
+ * match:Go
+*/
+export const nameGroup = (name: string, regStr: string) => {
+  if ((/^\d/.test(name)) || /\W/.test(name))
+    throw new Error('Name must contain only letters, numbers, and underscore and not start with a number.')
+
+  return `(?<${name}>${regStr})`
+}
+/**
+ * @en Returns a string in the regex syntax for a nonCapturing group of the regex strings in regStr
+ * @zh 返回一个被非捕获语法包裹的字符串
+ * @explain
+ * @en NonCapturing groups are not include in result.
+ * @zh 在匹配结果中移除这一组
+ * @example
+ * text:Gogo
+ * regex:/(?:Go)go/
+ * match: Gogo
+ * remove 'Go' group in result array.
+ */
+export const nonCaptureGroup = (regStr: string) => {
+  return `(?:${regStr})`
+}
 export { backReference as backRef, lookahead as positiveLookahead, lookbehind as positiveLookBehind }
