@@ -1,7 +1,7 @@
 {
-  "name": "start",
+  "name": "humre",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -13,7 +13,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "vitest",
-    "release": "bumpp && npm publish"
+    "release": "nrm use npm && bumpp && npm publish && nrm use taobao"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.2",
