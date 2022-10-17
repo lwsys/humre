@@ -226,4 +226,30 @@ export const zeroOrMoreLazy = (regexStr: RegexType) => {
   testEmpty(regexStr)
   return `${regexStr}*?`
 }
+/**
+ * @explain
+ * @en it tries to match as many as possible at least one or more.(greedy)
+ * @zh 它尽可能多的匹配至少一个或多个
+ * @example
+ * text:google
+ * regex:/o+l/
+ * match:[ool]
+*/
+export const oneOrMore = (regexStr: RegexType) => {
+  testEmpty(regexStr)
+  return `${regexStr}+`
+}
+/**
+ * @explain
+ * @en it tries to match as least as possible at least one or more.(lazy)
+ * @zh 它尽可能少的匹配至少一个或多个
+ * @example
+ * text:google
+ * regex:/o+?l/
+ * match:[ol]
+ */
+export const oneOrMoreLazy = (regexStr: RegexType) => {
+  testEmpty(regexStr)
+  return `${regexStr}+?`
+}
 export { backReference as backRef, lookahead as positiveLookahead, lookbehind as positiveLookBehind }
