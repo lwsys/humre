@@ -1,19 +1,17 @@
+name: lint
 on: [push, pull_request]
-  jobs:
-    lint:
-      name: lint
-      runs-on: ubuntu-latest
-      steps:
-        - name: Set Node
-          uses: actions/setup-node@v3
-          with:
-            node-version: 16.x
-
-        - name: Setup
-          run: npm i -g @antfu/ni
-
-        - name: Install
-          run: nci
-        
-        - name: Lint
-          run: nr lint
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+      - name: Set Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Install
+        run: pnpm install
+      - name: Lint
+        run: pnpm run lint
