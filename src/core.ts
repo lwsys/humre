@@ -300,4 +300,52 @@ export const endsWith = (regexStr: RegexType) => {
 export const startsAndEndsWith = (regexStr: RegexType) => {
   return `^${regexStr}$`
 }
-export { backReference as backRef, lookahead as positiveLookahead, lookbehind as positiveLookBehind }
+/**
+ * @explain
+ * @en match a string including the characters in tupleOfCharacters.
+ * @zh 匹配在tupleOfCharacters字符集里的字符
+ * @example
+ * text:google
+ * regex:/[ol]/
+ * match:[o]
+ */
+export const charts = (tupleOfCharacters: RegexType) => {
+  return `[${tupleOfCharacters}]`
+}
+/**
+ * @explain
+ * @en match a string excluding the characters in tupleOfCharacters.
+ * @zh 匹配不在tupleOfCharacters字符集里的字符
+ * @example
+ * text:google
+ * regex:/[^go]/
+ * match::[l]
+ */
+export const nonCharts = (tupleOfCharacters: RegexType) => {
+  return `[^${tupleOfCharacters}]`
+}
+/**
+ * @explain
+ * @en match a string may contain group.
+ * @zh 匹配一个可能包含组的字符串
+ * @example
+ * text:google
+ * regex:/(goo)?gle/
+ * match:[google,goo]
+*/
+export const optionalGroup = (regexStr: RegexType) => {
+  return `(${regexStr})?`
+}
+/**
+ * @explain
+ * @en match a string may contain group,the group not appear in result.
+ * @zh 匹配一个可能包含组的字符串，这个组不会出现在结果中。
+ * @example
+ * text:google
+ * regex:/(?:goo)?gle/
+ * match:[google]
+*/
+export const optionalNonGroup = (regexStr: RegexType) => {
+  return `(?:${regexStr})?`
+}
+export { backReference as backRef, lookahead as positiveLookahead, lookbehind as positiveLookBehind, charts as include, nonCharts as notInclude }

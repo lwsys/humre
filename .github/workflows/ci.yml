@@ -5,9 +5,10 @@ jobs:
     name: lint
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Install pnpm
         uses: pnpm/action-setup@v2
-      - name: Set Node
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
@@ -15,3 +16,5 @@ jobs:
         run: pnpm install
       - name: Lint
         run: pnpm run lint
+      - name: Test
+        run: pnpm run test
