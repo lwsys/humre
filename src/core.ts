@@ -252,4 +252,52 @@ export const oneOrMoreLazy = (regexStr: RegexType) => {
   testEmpty(regexStr)
   return `${regexStr}+?`
 }
+/**
+ * @explain
+ * @en match at the beginning of the text.
+ * @zh 匹配一个regexStr必须出现在开头的字符串
+ * @example
+ * text:google
+ * regex:/^go/
+ * match:[go]
+ *
+ * text:google
+ * regex:/^o/
+ * match:[]
+ */
+export const startsWith = (regexStr: RegexType) => {
+  return `^${regexStr}`
+}
+/**
+ * @explain
+ * @en match at the end of the text.
+ * @zh 匹配一个regexStr必须出现在结尾的字符串
+ * @example
+ * text:google
+ * regex:/le$/
+ * match:[le]
+ *
+ * text:google
+ * regex:/$l/
+ * match:[]
+ */
+export const endsWith = (regexStr: RegexType) => {
+  return `${regexStr}$`
+}
+/**
+ * @explain
+ * @en match a isolated string.
+ * @zh 匹配一个单独的字符串
+ * @example
+ * text:google
+ * regex:/^google$/
+ * match:[google]
+ *
+ * text:google
+ * regex:/^gl$/
+ * match:[]
+*/
+export const startsAndEndsWith = (regexStr: RegexType) => {
+  return `^${regexStr}$`
+}
 export { backReference as backRef, lookahead as positiveLookahead, lookbehind as positiveLookBehind }
