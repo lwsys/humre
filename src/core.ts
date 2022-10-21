@@ -14,8 +14,11 @@ const testEmpty = (regex: RegexType) => {
  * match: [1234123,123]
  * */
 export const backReference = (groupNumber: number) => {
-  if (groupNumber < 1)
-    throw new Error(`Expected group_number must equal or greater than 1, received ${groupNumber}`)
+  if (groupNumber < 1) {
+    throw new Error(
+      `Expected group_number must equal or greater than 1, received ${groupNumber}`,
+    )
+  }
 
   return `\\${groupNumber}`
 }
@@ -28,7 +31,7 @@ export const backReference = (groupNumber: number) => {
  * text:Gogogo
  * regex:/(go)+/
  * match:[gogo,go]
-*/
+ */
 export const group = (regexStr: RegexType) => {
   return `(${regexStr})`
 }
@@ -54,7 +57,7 @@ export const lookahead = (regexStr: RegexType) => {
  * text:hello.good
  * regex:/\w+(?!\.)/
  * match:[hell]
-*/
+ */
 export const negativeLookahead = (regexStr: RegexType) => {
   return `(?!${regexStr})`
 }
@@ -90,10 +93,13 @@ export const negativeLookBehind = (regexStr: RegexType) => {
  * text:Gogo
  * regex:/(?<token>Go)/
  * match:[Go,Go]&{groups:{token:"Go"}}
-*/
+ */
 export const nameGroup = (name: string, regexStr: RegexType) => {
-  if ((/^\d/.test(name)) || /\W/.test(name))
-    throw new Error('Name must contain only letters, numbers, and underscore and not start with a number.')
+  if (/^\d/.test(name) || /\W/.test(name)) {
+    throw new Error(
+      'Name must contain only letters, numbers, and underscore and not start with a number.',
+    )
+  }
 
   return `(?<${name}>${regexStr})`
 }
@@ -144,7 +150,7 @@ export const either = (regexStr: RegexType[]) => {
  * text:good
  * regex:/go{2}/
  * match:[goo]
-*/
+ */
 export const exactly = (quantity: number, regexStr: RegexType) => {
   if (quantity < 0)
     throw new Error(`quantity argument must be a positive int,not ${quantity}`)
@@ -152,14 +158,14 @@ export const exactly = (quantity: number, regexStr: RegexType) => {
   return `${regexStr}{${quantity}}`
 }
 /**
-  * @explain
-  * @en match a string with occurrences in the range
-  * @zh 匹配一个出现频率在范围内的字符串
-  * @example
-  * text:hello
-  * regex:/l{1,2}o/
-  * match:[llo]
-*/
+ * @explain
+ * @en match a string with occurrences in the range
+ * @zh 匹配一个出现频率在范围内的字符串
+ * @example
+ * text:hello
+ * regex:/l{1,2}o/
+ * match:[llo]
+ */
 export const between = (min: number, max: number, regexStr: RegexType) => {
   if (min < 0 || max < 0 || min > max)
     throw new Error(`unexpected range ${min},${max}`)
@@ -221,7 +227,7 @@ export const zeroOrMore = (regexStr: RegexType) => {
  * regex:/o*?l/
  * match:[ol]
  *
-*/
+ */
 export const zeroOrMoreLazy = (regexStr: RegexType) => {
   testEmpty(regexStr)
   return `${regexStr}*?`
@@ -234,7 +240,7 @@ export const zeroOrMoreLazy = (regexStr: RegexType) => {
  * text:google
  * regex:/o+l/
  * match:[ool]
-*/
+ */
 export const oneOrMore = (regexStr: RegexType) => {
   testEmpty(regexStr)
   return `${regexStr}+`
@@ -296,7 +302,7 @@ export const endsWith = (regexStr: RegexType) => {
  * text:google
  * regex:/^gl$/
  * match:[]
-*/
+ */
 export const startsAndEndsWith = (regexStr: RegexType) => {
   return `^${regexStr}$`
 }
@@ -332,7 +338,7 @@ export const nonCharts = (tupleOfCharacters: RegexType) => {
  * text:google
  * regex:/(goo)?gle/
  * match:[google,goo]
-*/
+ */
 export const optionalGroup = (regexStr: RegexType) => {
   return `(${regexStr})?`
 }
@@ -344,8 +350,74 @@ export const optionalGroup = (regexStr: RegexType) => {
  * text:google
  * regex:/(?:goo)?gle/
  * match:[google]
-*/
+ */
 export const optionalNonGroup = (regexStr: RegexType) => {
   return `(?:${regexStr})?`
 }
-export { backReference as backRef, lookahead as positiveLookahead, lookbehind as positiveLookBehind, charts as include, nonCharts as notInclude }
+/**
+ * @explain
+ * @en match a string may contain in group.
+ * @zh 匹配一个可能出现在group中的字符串。
+ * @example
+ * text:google
+ * regex:/g(o|l)/
+ * match:[go,o]
+ * regex:/g(o|l)/g
+ * match:[go,gl]
+ */
+export const groupEither = (regexStr: RegexType[]) => {
+  regexStr.forEach(isEmpty)
+  return `(${regexStr.join('|')})`
+}
+/**
+ * @explain
+ * @en match a string may contain in group,and group don't appear in result.
+ * @zh 匹配一个可能出现在group中的字符串，但是group的结果不会出现在数组中。
+ * @example
+ * text:google
+ * regex:/g(?:o|l)/
+ * match:[go]
+ * regex:/g(?:o|l)/g
+ * match:[go,gl]
+*/
+export const nonGroupEither = (regexStr: RegexType[]) => {
+  regexStr.forEach(isEmpty)
+  return `(?:${regexStr.join('|')})`
+}
+/**
+ * @explain
+ * @en match a string that occurs a certain quantity of times of regexStr.
+ * @zh 匹配regexStr出现特定次数的字符串。
+ * @example
+ * text:google
+ * regex:/(o){2}/
+ * match:[oo,o]
+*/
+export const groupExactly = (quantity: number, regexStr: RegexType) => {
+  if (quantity < 0)
+    throw new Error('quantity must be a positive int')
+
+  return `(${regexStr}){${quantity}}`
+}
+/**
+ * @explain
+ * @en match a string that occurs a certain quantity of times of regexStr, and regexStr don't appear in result.
+ * @zh 匹配regexStr出现特定次数的字符串，并且匹配的regexStr不会出现在结果中。
+ * @example
+ * text:google
+ * regex:/(o){2}/
+ * match:[oo]
+*/
+export const nonGroupExactly = (quantity: number, regexStr: RegexType) => {
+  if (quantity < 0)
+    throw new Error('quantity must be a positive int')
+
+  return `(?:${regexStr}){${quantity}}`
+}
+export {
+  backReference as backRef,
+  lookahead as positiveLookahead,
+  lookbehind as positiveLookBehind,
+  charts as include,
+  nonCharts as notInclude,
+}
