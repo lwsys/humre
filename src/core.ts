@@ -380,7 +380,7 @@ export const groupEither = (regexStr: RegexType[]) => {
  * regex:/g(?:o|l)/g
  * match:[go,gl]
 */
-export const nonGroupEither = (regexStr: RegexType[]) => {
+export const noncapGroupEither = (regexStr: RegexType[]) => {
   regexStr.forEach(isEmpty)
   return `(?:${regexStr.join('|')})`
 }
@@ -408,11 +408,75 @@ export const groupExactly = (quantity: number, regexStr: RegexType) => {
  * regex:/(o){2}/
  * match:[oo]
 */
-export const nonGroupExactly = (quantity: number, regexStr: RegexType) => {
+export const noncapGroupExactly = (quantity: number, regexStr: RegexType) => {
   if (quantity < 0)
     throw new Error('quantity must be a positive int')
 
   return `(?:${regexStr}){${quantity}}`
+}
+/**
+ * @explain
+ * @en match a string where the number of occurrences of regexStr is in the range (minimum, maximum).
+ * @zh 匹配出现regexStr出现次数为(minimum,maximum)范围的字符串。
+ * @example
+ * text:google
+ * regex:/(o){1,2}/
+ * match:[oo,o]
+*/
+export const groupBetween = (minimum: number, maximum: number, regexStr: RegexType) => {
+  if (minimum < 0)
+    throw new Error(`minimum must be a positive int,received ${minimum}`)
+  if (maximum < 0)
+    throw new Error(`maximum must be a positive int, received ${maximum}`)
+  if (minimum > maximum)
+    throw new Error('minimum must less than maximum')
+  return `(${regexStr}){${minimum},${maximum}}`
+}
+/**
+ * @explain
+ * @en match a string where the number of occurrences of regexStr is in the range (minimum, maximum), and regexStr don't appear in result.
+ * @zh 匹配出现regexStr出现次数为(minimum,maximum)范围的字符串，并且regexStr不会出现在结果中。
+ * @example
+ * text:google
+ * regex:/(?:o){1,2}/
+ * match:[oo]
+*/
+export const nonGroupBetween = (minimum: number, maximum: number, regexStr: RegexType) => {
+  if (minimum < 0)
+    throw new Error(`minimum must be a positive int,received ${minimum}`)
+  if (maximum < 0)
+    throw new Error(`maximum must be a positive int, received ${maximum}`)
+  if (minimum > maximum)
+    throw new Error('minimum must less than maximum')
+  return `(?:${regexStr}){${minimum},${maximum}}`
+}
+/**
+ * @explain
+ * @en match a string where occur at least "minimum" quantity of regexStr.
+ * @zh 匹配regexStr出现至少minimum次数的字符串。
+ * @example
+ * text:google
+ * regex:/(o){1,}/
+ * match:[oo]
+ */
+export const groupAtLeast = (minimum: number, regexStr: RegexType) => {
+  if (minimum < 0)
+    throw new Error(`minimum must be a positive int,received ${minimum}`)
+  return `(${regexStr}){${minimum},}`
+}
+/**
+ * @explain
+ * @en match a string where occur at least "minimum" quantity of regexStr, and regexStr don't appear in result.
+ * @zh 匹配regexStr出现至少minimum次数的字符串，并且regexStr不会出现在结果中。
+ * @example
+ * text:google
+ * regex:/(o){1,}/
+ * match:[oo]
+ */
+export const nonGroupAtLeast = (minimum: number, regexStr: RegexType) => {
+  if (minimum < 0)
+    throw new Error(`minimum must be a positive int,received ${minimum}`)
+  return `(?:${regexStr}){${minimum},}`
 }
 export {
   backReference as backRef,
