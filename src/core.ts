@@ -5,6 +5,7 @@ const testEmpty = (regex: RegexType) => {
     throw new Error('regexStr argument must have at least one nonBlank value')
 }
 /**
+ * \\**groupNumber**
  * @explain
  * @en A group can be referenced in the pattern using groupNumber.
  * @zh 可以使用groupNumber去引用之前的group。
@@ -24,19 +25,21 @@ export const backReference = (groupNumber: number) => {
 }
 
 /**
+ * (**regexStr**)
  * @explain
  * @en Put a quantifier after the parentheses,it applies to the parentheses as a whole.We can get a part of the match as a separate item in the result array.
  * @zh 将一个量词放在圆括号后，他将把圆括号视为一个整体进行内容匹配。我们可以在结果数组中拿到整个匹配结果。
  * @example
  * text:Gogogo
- * regex:/(go)+/
- * match:[gogo,go]
+ * regex:/(go)/
+ * match:[go,go]
  */
 export const group = (regexStr: RegexType) => {
   return `(${regexStr})`
 }
 
 /**
+ * (?=**regexStr**)
  * @explain
  * @en look for somethings but match if it followed the special keyword
  * @zh 查找某个在特定关键字之前的字符串。
@@ -50,6 +53,7 @@ export const lookahead = (regexStr: RegexType) => {
 }
 
 /**
+ * (?!**regexStr**)
  * @explain
  * @en look for somethings but match if it NOT followed the special keyword
  * @zh 查找某个不在特定关键字之前的字符串。
@@ -62,6 +66,7 @@ export const negativeLookahead = (regexStr: RegexType) => {
   return `(?!${regexStr})`
 }
 /**
+ * (?<=**regexStr**)
  * @explain
  * @en look for somethings but match if it behind the special keyword
  * @zh 查找某个在特定关键字之后的字符串
@@ -74,6 +79,7 @@ export const lookbehind = (regexStr: RegexType) => {
   return `(?<=${regexStr})`
 }
 /**
+ * (?<!**regexStr**)
  * @explain
  * @en look for somethings but match if it NOT behind the special keyword
  * @zh 查找不某个在特定关键字之后的字符串
@@ -86,6 +92,7 @@ export const negativeLookBehind = (regexStr: RegexType) => {
   return `(?<!${regexStr})`
 }
 /**
+ * (?\<name\>**regexStr**)
  * @explain
  * @en Named groups can be referred to by their name rather than their group number.
  * @zh 可以在结果中使用名称而非索引号来访问。
@@ -104,6 +111,7 @@ export const nameGroup = (name: string, regexStr: RegexType) => {
   return `(?<${name}>${regexStr})`
 }
 /**
+ * (?:**regexStr**)
  * @explain
  * @en NonCapturing groups are not include in result.
  * @zh 在匹配结果中移除这一组
@@ -117,6 +125,7 @@ export const nonCaptureGroup = (regexStr: RegexType) => {
   return `(?:${regexStr})`
 }
 /**
+ * **regexStr**?
  * @explain
  * @en match zero or one string
  * @zh 匹配0个或1个字符
@@ -131,6 +140,7 @@ export const optional = (regexStr: RegexType) => {
   return `${regexStr}?`
 }
 /**
+ * [a,b,c]->a|b|c
  * @explain
  * @en match one of the string in regexStr.its priority is lower than normal string.
  * @zh 匹配参数数组中的其中一个字符串。他的优先级低于正常连接的字符串。
@@ -143,6 +153,7 @@ export const either = (regexStr: RegexType[]) => {
   return regexStr.join('|')
 }
 /**
+ * **regexStr**{**quantity**}
  * @explain
  * @en match a exact number string.
  * @zh 匹配一个精准数量的字符串
@@ -158,6 +169,7 @@ export const exactly = (quantity: number, regexStr: RegexType) => {
   return `${regexStr}{${quantity}}`
 }
 /**
+ * **regexStr**{**min**,**max**}
  * @explain
  * @en match a string with occurrences in the range
  * @zh 匹配一个出现频率在范围内的字符串
@@ -174,6 +186,7 @@ export const between = (min: number, max: number, regexStr: RegexType) => {
   return `${regexStr}{${min},${max}}`
 }
 /**
+ * **regexStr**{**minimum**,}
  * @explain
  * @en match at least 'minimum' occurrence of the string
  * @zh 匹配至少出现minimum次的字符串
@@ -206,6 +219,7 @@ export const atLeast = (minimum: number, regexStr: RegexType) => {
 //   return `${regexStr}{,${maximum}}`
 // }
 /**
+ * **regexStr***
  * @explain
  * @en it tries to make the largest match possible(greedy)
  * @zh 他会尽可能的匹配多的字符（贪婪模式）
@@ -219,6 +233,7 @@ export const zeroOrMore = (regexStr: RegexType) => {
   return `${regexStr}*`
 }
 /**
+ * **regexStr***?
  * @explain
  * @en it tries to make the smallest match possible(lazy)
  * @zh 他会尽可能的匹配更少的字符（懒惰模式）
@@ -233,6 +248,7 @@ export const zeroOrMoreLazy = (regexStr: RegexType) => {
   return `${regexStr}*?`
 }
 /**
+ * **regexStr**+
  * @explain
  * @en it tries to match as many as possible at least one or more.(greedy)
  * @zh 它尽可能多的匹配至少一个或多个
@@ -246,6 +262,7 @@ export const oneOrMore = (regexStr: RegexType) => {
   return `${regexStr}+`
 }
 /**
+ * **regexStr**+?
  * @explain
  * @en it tries to match as least as possible at least one or more.(lazy)
  * @zh 它尽可能少的匹配至少一个或多个
@@ -259,6 +276,7 @@ export const oneOrMoreLazy = (regexStr: RegexType) => {
   return `${regexStr}+?`
 }
 /**
+ * ^**regexStr**
  * @explain
  * @en match at the beginning of the text.
  * @zh 匹配一个regexStr必须出现在开头的字符串
@@ -275,6 +293,7 @@ export const startsWith = (regexStr: RegexType) => {
   return `^${regexStr}`
 }
 /**
+ * **regexStr**$
  * @explain
  * @en match at the end of the text.
  * @zh 匹配一个regexStr必须出现在结尾的字符串
@@ -291,6 +310,7 @@ export const endsWith = (regexStr: RegexType) => {
   return `${regexStr}$`
 }
 /**
+ * ^**regexStr**$
  * @explain
  * @en match a isolated string.
  * @zh 匹配一个单独的字符串
@@ -307,6 +327,7 @@ export const startsAndEndsWith = (regexStr: RegexType) => {
   return `^${regexStr}$`
 }
 /**
+ * [**tupleOfCharacters**]
  * @explain
  * @en match a string including the characters in tupleOfCharacters.
  * @zh 匹配在tupleOfCharacters字符集里的字符
@@ -319,6 +340,7 @@ export const charts = (tupleOfCharacters: RegexType) => {
   return `[${tupleOfCharacters}]`
 }
 /**
+ * [^**tupleOfCharacters**]
  * @explain
  * @en match a string excluding the characters in tupleOfCharacters.
  * @zh 匹配不在tupleOfCharacters字符集里的字符
@@ -331,6 +353,7 @@ export const nonCharts = (tupleOfCharacters: RegexType) => {
   return `[^${tupleOfCharacters}]`
 }
 /**
+ * (**regexStr**)?
  * @explain
  * @en match a string may contain group.
  * @zh 匹配一个可能包含组的字符串
@@ -343,6 +366,7 @@ export const optionalGroup = (regexStr: RegexType) => {
   return `(${regexStr})?`
 }
 /**
+ * (?:**regexStr**)?
  * @explain
  * @en match a string may contain group,the group not appear in result.
  * @zh 匹配一个可能包含组的字符串，这个组不会出现在结果中。
@@ -355,6 +379,7 @@ export const optionalNonGroup = (regexStr: RegexType) => {
   return `(?:${regexStr})?`
 }
 /**
+ * [a,b,c] -> (a|b|c)
  * @explain
  * @en match a string may contain in group.
  * @zh 匹配一个可能出现在group中的字符串。
@@ -370,6 +395,7 @@ export const groupEither = (regexStr: RegexType[]) => {
   return `(${regexStr.join('|')})`
 }
 /**
+ * [a,b,c] -> (?:a|b|c)
  * @explain
  * @en match a string may contain in group,and group don't appear in result.
  * @zh 匹配一个可能出现在group中的字符串，但是group的结果不会出现在数组中。
@@ -385,6 +411,7 @@ export const noncapGroupEither = (regexStr: RegexType[]) => {
   return `(?:${regexStr.join('|')})`
 }
 /**
+ * (**regexStr**){**quantity**}
  * @explain
  * @en match a string that occurs a certain quantity of times of regexStr.
  * @zh 匹配regexStr出现特定次数的字符串。
@@ -400,6 +427,7 @@ export const groupExactly = (quantity: number, regexStr: RegexType) => {
   return `(${regexStr}){${quantity}}`
 }
 /**
+ * (?:**regexStr**){**quantity**}
  * @explain
  * @en match a string that occurs a certain quantity of times of regexStr, and ignore the group in result.
  * @zh 匹配regexStr出现特定次数的字符串，并且在结果中忽略这个组。
@@ -415,6 +443,7 @@ export const noncapGroupExactly = (quantity: number, regexStr: RegexType) => {
   return `(?:${regexStr}){${quantity}}`
 }
 /**
+ * (**regexStr**){**minimum**,**maximum**}
  * @explain
  * @en match a string where the number of occurrences of regexStr is in the range (minimum, maximum).
  * @zh 匹配出现regexStr出现次数为(minimum,maximum)范围的字符串。
@@ -433,6 +462,7 @@ export const groupBetween = (minimum: number, maximum: number, regexStr: RegexTy
   return `(${regexStr}){${minimum},${maximum}}`
 }
 /**
+ * (?:**regexStr**){**minimum**,**maximum**}
  * @explain
  * @en match a string where the number of occurrences of regexStr is in the range (minimum, maximum), and ignore the group in result.
  * @zh 匹配出现regexStr出现次数为(minimum,maximum)范围的字符串，并且在结果中忽略这个组。
@@ -451,6 +481,7 @@ export const nonGroupBetween = (minimum: number, maximum: number, regexStr: Rege
   return `(?:${regexStr}){${minimum},${maximum}}`
 }
 /**
+ * (**regexStr**){**minimum**,}
  * @explain
  * @en match a string where occur at least "minimum" quantity of regexStr.
  * @zh 匹配regexStr出现至少minimum次数的字符串。
@@ -465,6 +496,7 @@ export const groupAtLeast = (minimum: number, regexStr: RegexType) => {
   return `(${regexStr}){${minimum},}`
 }
 /**
+ * (?:**regexStr**){**minimum**,}
  * @explain
  * @en match a string where occur at least "minimum" quantity of regexStr, and ignore the group in result.
  * @zh 匹配regexStr出现至少minimum次数的字符串，并且在结果中忽略这个组。
@@ -480,6 +512,7 @@ export const noncapGroupAtLeast = (minimum: number, regexStr: RegexType) => {
 }
 
 /**
+ * (**regexStr**){,**maximum**}
  * @explain
  * @en match a string where occur at most "maximum" quantity of regexStr.
  * @zh 匹配regexStr至多出现maximum次数的字符串。
@@ -494,6 +527,7 @@ export const groupAtMost = (maximum: number, regexStr: RegexType) => {
   return `(${regexStr}){,${maximum}}`
 }
 /**
+ * (?:**regexStr**){,**maximum**}
  * @explain
  * @en match a string where occur at most "maximum" quantity of regexStr, and ignore the group in result.
  * @zh 匹配regexStr至多出现maximum次数的字符串，并且在结果中忽略这个组。
@@ -508,6 +542,7 @@ export const noncapGroupAtMost = (maximum: number, regexStr: RegexType) => {
   return `(?:${regexStr}){,${maximum}}`
 }
 /**
+ * (**regexStr**)*
  * @explain
  * @en match a string that may contain regexStr.
  * @zh 匹配一个可能包含regexStr的字符串
@@ -522,6 +557,7 @@ export const zeroOrMoreGroup = (regexStr: RegexType) => {
   return `(${regexStr})*`
 }
 /**
+ * (?:**regexStr**)*
  * @explain
  * @en match a string that may contain regexStr, and ignore the group in result.
  * @zh 匹配一个可能包含regexStr的字符串，并且在结果中忽略这个组。
@@ -536,6 +572,7 @@ export const zeroOrMoreNoncapGroup = (regexStr: RegexType) => {
   return `(?:${regexStr})*`
 }
 /**
+ * (**regexStr**)*?
  * @explain
  * @en match a string that may contain fewer regexStr.(Lazy Mode)
  * @zh 匹配一个可能包含更少的regexStr的字符串。(懒惰模式)
@@ -548,6 +585,7 @@ export const zeroOrMoreLazyGroup = (regexStr: RegexType) => {
   return `(${regexStr})*?`
 }
 /**
+ * (?:**regexStr**)*?
  * @explain
  * @en match a string that may contain fewer regexStr,and ignore the group in result.(Lazy Mode)
  * @zh 匹配一个可能包含更少的regexStr的字符串，并且在结果中忽略这个组。(懒惰模式)
@@ -560,6 +598,7 @@ export const zeroOrMoreLazyNoncapGroup = (regexStr: RegexType) => {
   return `(?:${regexStr})*?`
 }
 /**
+ * (**regexStr**)+
  * @explain
  * @en match a string that contain at least one regexStr.
  * @zh 匹配至少包含一个regexStr的字符串。
@@ -572,6 +611,7 @@ export const oneOrMoreGroup = (regexStr: RegexType) => {
   return `(${regexStr})+`
 }
 /**
+ * (?:**regexStr**)+
  * @explain
  * @en match a string that contain at least one regexStr, ignore the group in result.
  * @zh 匹配至少包含一个regexStr的字符串，并且在结果中忽略这个组
@@ -584,6 +624,7 @@ export const oneOrMoreNoncapGroup = (regexStr: RegexType) => {
   return `(?:${regexStr})+`
 }
 /**
+ * (**regexStr**)+?
  * @explain
  * @en match a string that contain at least one but more fewer regexStr.(**Lazy Mode**)
  * @zh 匹配至少包含一个但更少的regexStr的字符串。(**懒惰模式**)
@@ -596,6 +637,7 @@ export const oneOrMoreLazyGroup = (regexStr: RegexType) => {
   return `(${regexStr})+?`
 }
 /**
+ * (?:**regexStr**)+?
  * @explain
  * @en match a string that contain at least one but more fewer regexStr, ignore the group in result.(**Lazy Mode**)
  * @zh 匹配至少包含一个但更少的regexStr的字符串，并且regexStr不会出现在结果当中。(**懒惰模式**)
@@ -608,6 +650,7 @@ export const oneOrMoreLazyNoncapGroup = (regexStr: RegexType) => {
   return `(?:${regexStr})+?`
 }
 /**
+ * ([**tupleOfCharacters**])
  * @explain
  * @en match a string that contain param.
  * @zh 匹配一个包含参数的字符串。
@@ -620,6 +663,7 @@ export const groupChars = (tupleOfCharacters: string) => {
   return `([${tupleOfCharacters}])`
 }
 /**
+ * (?:[**tupleOfCharacters**])
  * @explain
  * @en match a string that contain param,and ignore the group in result.
  * @zh 匹配一个包含参数的字符串，并且在结果中忽略这个组。
@@ -632,6 +676,7 @@ export const noncapGroupChars = (tupleOfCharacters: string) => {
   return `(?:[${tupleOfCharacters}])`
 }
 /**
+ * ([^**tupleOfCharacters**])
  * @explain
  * @en match a string that don't contain param.
  * @zh 匹配一个不包含参数的字符串
@@ -644,6 +689,7 @@ export const groupNonChars = (tupleOfCharacters: string) => {
   return `([^${tupleOfCharacters}])`
 }
 /**
+ * (?:[^**tupleOfCharacters**])
  * @explain
  * @en match a string that don't contain param,and ignore the group in result.
  * @zh 匹配一个不包含参数的字符串，并且在结果中忽略这个组。
