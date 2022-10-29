@@ -401,8 +401,8 @@ export const groupExactly = (quantity: number, regexStr: RegexType) => {
 }
 /**
  * @explain
- * @en match a string that occurs a certain quantity of times of regexStr, and regexStr don't appear in result.
- * @zh 匹配regexStr出现特定次数的字符串，并且匹配的regexStr不会出现在结果中。
+ * @en match a string that occurs a certain quantity of times of regexStr, and ignore the group in result.
+ * @zh 匹配regexStr出现特定次数的字符串，并且在结果中忽略这个组。
  * @example
  * text:google
  * regex:/(o){2}/
@@ -434,8 +434,8 @@ export const groupBetween = (minimum: number, maximum: number, regexStr: RegexTy
 }
 /**
  * @explain
- * @en match a string where the number of occurrences of regexStr is in the range (minimum, maximum), and regexStr don't appear in result.
- * @zh 匹配出现regexStr出现次数为(minimum,maximum)范围的字符串，并且regexStr不会出现在结果中。
+ * @en match a string where the number of occurrences of regexStr is in the range (minimum, maximum), and ignore the group in result.
+ * @zh 匹配出现regexStr出现次数为(minimum,maximum)范围的字符串，并且在结果中忽略这个组。
  * @example
  * text:google
  * regex:/(?:o){1,2}/
@@ -466,17 +466,194 @@ export const groupAtLeast = (minimum: number, regexStr: RegexType) => {
 }
 /**
  * @explain
- * @en match a string where occur at least "minimum" quantity of regexStr, and regexStr don't appear in result.
- * @zh 匹配regexStr出现至少minimum次数的字符串，并且regexStr不会出现在结果中。
+ * @en match a string where occur at least "minimum" quantity of regexStr, and ignore the group in result.
+ * @zh 匹配regexStr出现至少minimum次数的字符串，并且在结果中忽略这个组。
  * @example
  * text:google
  * regex:/(o){1,}/
  * match:[oo]
  */
-export const nonGroupAtLeast = (minimum: number, regexStr: RegexType) => {
+export const noncapGroupAtLeast = (minimum: number, regexStr: RegexType) => {
   if (minimum < 0)
     throw new Error(`minimum must be a positive int,received ${minimum}`)
   return `(?:${regexStr}){${minimum},}`
+}
+
+/**
+ * @explain
+ * @en match a string where occur at most "maximum" quantity of regexStr.
+ * @zh 匹配regexStr至多出现maximum次数的字符串。
+ * @example
+ * text:google
+ * regex:/(o){1,}/
+ * match:[oo]
+ */
+export const groupAtMost = (maximum: number, regexStr: RegexType) => {
+  if (maximum < 0)
+    throw new Error(`maximum must be a positive int,received ${maximum}`)
+  return `(${regexStr}){,${maximum}}`
+}
+/**
+ * @explain
+ * @en match a string where occur at most "maximum" quantity of regexStr, and ignore the group in result.
+ * @zh 匹配regexStr至多出现maximum次数的字符串，并且在结果中忽略这个组。
+ * @example
+ * text:google
+ * regex:/(o){1,}/
+ * match:[oo]
+ */
+export const noncapGroupAtMost = (maximum: number, regexStr: RegexType) => {
+  if (maximum < 0)
+    throw new Error(`maximum must be a positive int,received ${maximum}`)
+  return `(?:${regexStr}){,${maximum}}`
+}
+/**
+ * @explain
+ * @en match a string that may contain regexStr.
+ * @zh 匹配一个可能包含regexStr的字符串
+ * @example
+ * text:google
+ * regex:/g(o)*g/
+ * match:[goog,o]
+ * regex:/(o)*g/
+ * match:[g,undefined]
+ */
+export const zeroOrMoreGroup = (regexStr: RegexType) => {
+  return `(${regexStr})*`
+}
+/**
+ * @explain
+ * @en match a string that may contain regexStr, and ignore the group in result.
+ * @zh 匹配一个可能包含regexStr的字符串，并且在结果中忽略这个组。
+ * @example
+ * text:google
+ * regex:/g(?:o)*g/
+ * match:[goog]
+ * regex:/(?:o)*g/
+ * match:[g]
+ */
+export const zeroOrMoreNoncapGroup = (regexStr: RegexType) => {
+  return `(?:${regexStr})*`
+}
+/**
+ * @explain
+ * @en match a string that may contain fewer regexStr.(Lazy Mode)
+ * @zh 匹配一个可能包含更少的regexStr的字符串。(懒惰模式)
+ * @example
+ * text:google
+ * regex:/g(o)*?/
+ * match:[g,undefined]//because as long as match 'g', the condition is satisfied.
+*/
+export const zeroOrMoreLazyGroup = (regexStr: RegexType) => {
+  return `(${regexStr})*?`
+}
+/**
+ * @explain
+ * @en match a string that may contain fewer regexStr,and ignore the group in result.(Lazy Mode)
+ * @zh 匹配一个可能包含更少的regexStr的字符串，并且在结果中忽略这个组。(懒惰模式)
+ * @example
+ * text:google
+ * regex:/g(?:o)*?/
+ * match:[g]
+*/
+export const zeroOrMoreLazyNoncapGroup = (regexStr: RegexType) => {
+  return `(?:${regexStr})*?`
+}
+/**
+ * @explain
+ * @en match a string that contain at least one regexStr.
+ * @zh 匹配至少包含一个regexStr的字符串。
+ * @example
+ * text:google
+ * regex:/(o)+/
+ * match:[oo,o]
+ */
+export const oneOrMoreGroup = (regexStr: RegexType) => {
+  return `(${regexStr})+`
+}
+/**
+ * @explain
+ * @en match a string that contain at least one regexStr, ignore the group in result.
+ * @zh 匹配至少包含一个regexStr的字符串，并且在结果中忽略这个组
+ * @example
+ * text:google
+ * regex:/(?:o)+/
+ * match:[oo]
+ */
+export const oneOrMoreNoncapGroup = (regexStr: RegexType) => {
+  return `(?:${regexStr})+`
+}
+/**
+ * @explain
+ * @en match a string that contain at least one but more fewer regexStr.(**Lazy Mode**)
+ * @zh 匹配至少包含一个但更少的regexStr的字符串。(**懒惰模式**)
+ * @example
+ * text:google
+ * regex:/(o)+?/
+ * match:[o,o]
+ */
+export const oneOrMoreLazyGroup = (regexStr: RegexType) => {
+  return `(${regexStr})+?`
+}
+/**
+ * @explain
+ * @en match a string that contain at least one but more fewer regexStr, ignore the group in result.(**Lazy Mode**)
+ * @zh 匹配至少包含一个但更少的regexStr的字符串，并且regexStr不会出现在结果当中。(**懒惰模式**)
+ * @example
+ * text:google
+ * regex:/(?:o)+?/
+ * match:[o]
+ */
+export const oneOrMoreLazyNoncapGroup = (regexStr: RegexType) => {
+  return `(?:${regexStr})+?`
+}
+/**
+ * @explain
+ * @en match a string that contain param.
+ * @zh 匹配一个包含参数的字符串。
+ * @example
+ * text:google
+ * regex:/([go])/
+ * match:[g,g]
+*/
+export const groupChars = (tupleOfCharacters: string) => {
+  return `([${tupleOfCharacters}])`
+}
+/**
+ * @explain
+ * @en match a string that contain param,and ignore the group in result.
+ * @zh 匹配一个包含参数的字符串，并且在结果中忽略这个组。
+ * @example
+ * text:google
+ * regex:/(?:[go])/
+ * match:[g]
+*/
+export const noncapGroupChars = (tupleOfCharacters: string) => {
+  return `(?:[${tupleOfCharacters}])`
+}
+/**
+ * @explain
+ * @en match a string that don't contain param.
+ * @zh 匹配一个不包含参数的字符串
+ * @example
+ * text:google
+ * regex:/([^go])/
+ * match:[l,l]
+*/
+export const groupNonChars = (tupleOfCharacters: string) => {
+  return `([^${tupleOfCharacters}])`
+}
+/**
+ * @explain
+ * @en match a string that don't contain param,and ignore the group in result.
+ * @zh 匹配一个不包含参数的字符串，并且在结果中忽略这个组。
+ * @example
+ * text:google
+ * regex:/(?:[^go])/
+ * match:[l]
+*/
+export const noncapGroupNonChars = (tupleOfCharacters: string) => {
+  return `(?:[^${tupleOfCharacters}])`
 }
 export {
   backReference as backRef,
